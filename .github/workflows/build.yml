@@ -1,4 +1,4 @@
-name: Build Stockfish EXE
+name: Build Custom Stockfish Executable (.exe)
 
 on:
   push:
@@ -14,18 +14,22 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up MinGW
-      uses: egor-tukin/setup-mingw@v2
+    - name: Set up MSYS2 Environment
+      uses: msys2/setup-msys2@v2
       with:
-        platform: x64
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-make
 
-    - name: Compile Stockfish
+    - name: Compile Stockfish Engine
       shell: msys2 {0}
       working-directory: ./src
       run: |
-        make -j profile-build ARCH=x86-64-avx2
+        make -j$(nproc) profile-build ARCH=x86-64-avx2
 
-    - name: Upload Artifact
+    - name: Upload Stockfish Executable
       uses: actions/upload-artifact@v4
       with:
         name: stockfish-brilliant-exe
