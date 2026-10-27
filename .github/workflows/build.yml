@@ -1,0 +1,32 @@
+name: Build Stockfish EXE
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up MinGW
+      uses: egor-tukin/setup-mingw@v2
+      with:
+        platform: x64
+
+    - name: Compile Stockfish
+      shell: msys2 {0}
+      working-directory: ./src
+      run: |
+        make -j profile-build ARCH=x86-64-avx2
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: stockfish-brilliant-exe
+        path: src/stockfish.exe
