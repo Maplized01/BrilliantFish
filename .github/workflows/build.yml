@@ -28,7 +28,7 @@ jobs:
       shell: msys2 {0}
       working-directory: ./src
       run: |
-        make -j$(nproc) profile-build ARCH=x86-64-avx2
+        make -j$(nproc) profile-build ARCH=x86-64
 
     - name: Upload Stockfish Executable
       uses: actions/upload-artifact@v4
